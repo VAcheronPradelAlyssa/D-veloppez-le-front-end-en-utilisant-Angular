@@ -2,21 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { PieComponent } from './component/pie/pie.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component'; 
+
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: HomeComponent,
-  },
+  },  
+  { path: '', component: DashboardComponent },
   {
     path: '**', // wildcard
     component: NotFoundComponent,
-  },
-  {
-    path: '/pie', 
-    component: PieComponent,
-  },
+  },  
 ];
 
 @NgModule({

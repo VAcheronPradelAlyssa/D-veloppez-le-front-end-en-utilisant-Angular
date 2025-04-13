@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pie',
@@ -19,7 +20,7 @@ import { OlympicCountry } from 'src/app/core/models/Olympic';
   styleUrls: ['./pie.component.scss'],
   standalone: false
 })
-export class PieComponent implements OnInit {
+export class PieComponent implements OnInit, OnDestroy {
   public pieChartData: any[] = [];
   public view: [number, number] = [700, 500];
 
@@ -31,20 +32,27 @@ export class PieComponent implements OnInit {
   explodeSlices = false;
   trimLabels = false;
 
+  private olympicsSubscription: Subscription | null = null;
+
   constructor(private olympicService: OlympicService) {}
 
   ngOnInit(): void {
-    // Chargement des données olympiques et construction du jeu de données pour le graphique
-    this.olympicService.loadInitialData().subscribe(() => {
-      this.olympicService.getOlympics().subscribe((data: OlympicCountry[]) => {
-        if (data) {
-          this.pieChartData = data.map((country) => ({
-            name: country.country,
-            value: this.getTotalMedals(country.participations)
-          }));
-        }
-      });
+    this.olympicsSubscription = this.olympicService.getOlympics().subscribe((data: OlympicCountry[]) => {
+      if (data) {
+        // Construction des données pour le graphique
+        this.pieChartData = data.map((country) => ({
+          name: country.country,
+          value: this.getTotalMedals(country.participations)
+        }));
+      }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Annuler les souscriptions lorsque le composant est détruit pour éviter les fuites de mémoire
+    if (this.olympicsSubscription) {
+      this.olympicsSubscription.unsubscribe();
+    }
   }
 
   private getTotalMedals(participations: any[]): number {
