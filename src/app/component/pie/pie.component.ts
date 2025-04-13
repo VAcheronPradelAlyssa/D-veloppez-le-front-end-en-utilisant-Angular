@@ -51,7 +51,7 @@ export class PieComponent implements OnInit, OnDestroy {
         this.pieChartData = data.map((country) => ({
           name: country.country,
           value: this.getTotalMedals(country.participations),
-          extra: { coutryId: country.id }
+          extra: { countryId: country.id }
         }));
         this.allCountriesIds = data.map(country => country.id);
         console.log("IDs des pays chargés :", this.allCountriesIds);
@@ -70,23 +70,21 @@ export class PieComponent implements OnInit, OnDestroy {
     return participations.reduce((total, participation) => total + participation.medalsCount, 0);
   }
 
- //event sélection d'un pays dans le graphique, redirige page détails
- onSelect(event: any): void {
+  onSelect(event: any): void {
 
-  //const countryId = 9999; 
-  const countryId = event.extra.countryId;
+    const countryId = event.extra.countryId;
 
-  if (!this.allCountriesIds.includes(countryId)) {
-    console.error(`Erreur : Le pays avec l'ID ${countryId} n'existe pas.`);
-    alert("Ce pays n'existe pas dans notre base de données.");
-    return;
+    if(!this.allCountriesIds.includes(countryId)){
+      console.error(`Erreur :Le pays avec l'ID ${countryId} n'existe pas.`);
+      alert("Ce pays n'existe pas dans notre base de données.");
+      return;
+    }
+
+    this.router.navigate(['/details', countryId]).catch(err => {
+      console.error("Erreur de navigation:", err);
+      alert("Impossible d'ouvrir la page des détails. Veuillez réessayer plus tard.");
+    });
   }
-
-  this.router.navigate(['/details', countryId]).catch(err => {
-    console.error("Erreur de navigation :", err);
-    alert("Impossible d'ouvrir la page des détails. Veuillez réessayer plus tard.");
-  });
-}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {

@@ -20,3 +20,13 @@
         <p>Total number of athletes <br><strong>{{ getTotalAthletes(country.participations) }}</strong></p>
       </div>
     </div>
+  
+    <div class="line-chart">
+      <app-line ></app-line>
+    </div>
+  </div>
+  
+  <a routerLink="" *ngIf="error || (country && !loading && !error)">
+    <button class="buttonBack">Retour</button>
+  </a>
+  
