@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
 import { Subscription } from 'rxjs';
@@ -37,6 +37,7 @@ export class PieComponent implements OnInit, OnDestroy {
   constructor(private olympicService: OlympicService) {}
 
   ngOnInit(): void {
+    this.updateChartDimensions();
     this.olympicsSubscription = this.olympicService.getOlympics().subscribe((data: OlympicCountry[]) => {
       if (data) {
         // Construction des données pour le graphique
@@ -58,4 +59,24 @@ export class PieComponent implements OnInit, OnDestroy {
   private getTotalMedals(participations: any[]): number {
     return participations.reduce((total, participation) => total + participation.medalsCount, 0);
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateChartDimensions();
+  }
+
+  //taille graphique redéfnit
+  private updateChartDimensions(): void {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    if (width < 600) {
+      this.view = [width - 50, height / 2];
+    } else if (width < 1024) {
+      this.view = [width - 100, height / 2];
+    
+    }
+  }
 }
+
+
