@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { OlympicCountry } from 'src/app/core/models/Olympic';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pie',
@@ -14,7 +15,8 @@ import { Subscription } from 'rxjs';
       [doughnut]="doughnut"
       [gradient]="gradient"
       [explodeSlices]="explodeSlices"
-      [trimLabels]="trimLabels">
+      [trimLabels]="trimLabels"
+      (select)="onSelect($event)">
     </ngx-charts-pie-chart>
   `,
   styleUrls: ['./pie.component.scss'],
@@ -23,6 +25,7 @@ import { Subscription } from 'rxjs';
 export class PieComponent implements OnInit, OnDestroy {
   public pieChartData: any[] = [];
   public view: [number, number] = [700, 500];
+  public allCountriesIds: number[] = [];
 
   // Options du graphique
   showLegend = false;
@@ -34,17 +37,24 @@ export class PieComponent implements OnInit, OnDestroy {
 
   private olympicsSubscription: Subscription | null = null;
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(
+    private olympicService: OlympicService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.updateChartDimensions();
+
     this.olympicsSubscription = this.olympicService.getOlympics().subscribe((data: OlympicCountry[]) => {
       if (data) {
         // Construction des données pour le graphique
         this.pieChartData = data.map((country) => ({
           name: country.country,
-          value: this.getTotalMedals(country.participations)
+          value: this.getTotalMedals(country.participations),
+          extra: { coutryId: country.id }
         }));
+        this.allCountriesIds = data.map(country => country.id);
+        console.log("IDs des pays chargés :", this.allCountriesIds);
       }
     });
   }
@@ -59,6 +69,24 @@ export class PieComponent implements OnInit, OnDestroy {
   private getTotalMedals(participations: any[]): number {
     return participations.reduce((total, participation) => total + participation.medalsCount, 0);
   }
+
+ //event sélection d'un pays dans le graphique, redirige page détails
+ onSelect(event: any): void {
+
+  //const countryId = 9999; 
+  const countryId = event.extra.countryId;
+
+  if (!this.allCountriesIds.includes(countryId)) {
+    console.error(`Erreur : Le pays avec l'ID ${countryId} n'existe pas.`);
+    alert("Ce pays n'existe pas dans notre base de données.");
+    return;
+  }
+
+  this.router.navigate(['/details', countryId]).catch(err => {
+    console.error("Erreur de navigation :", err);
+    alert("Impossible d'ouvrir la page des détails. Veuillez réessayer plus tard.");
+  });
+}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {

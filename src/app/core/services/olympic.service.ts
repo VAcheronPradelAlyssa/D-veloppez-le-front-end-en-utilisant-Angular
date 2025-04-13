@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { OlympicCountry} from '../models/Olympic';
-import { catchError, filter, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,11 @@ export class OlympicService {
       })
     );
   }
-
+  getCountryById(id: number): Observable<OlympicCountry | undefined> {
+    return this.olympics$.asObservable().pipe(
+      map((countries) => countries.find(c => c.id === id)) 
+    );
+  }
   getOlympics() {
     return this.olympics$.asObservable().pipe(
       filter(olympics$ => olympics$ && olympics$.length > 0)
