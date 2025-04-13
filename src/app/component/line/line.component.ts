@@ -21,9 +21,6 @@ import { Subscription } from 'rxjs';
       [gradient]="gradient"
       [tooltipDisabled]="tooltipDisabled">
     </ngx-charts-line-chart>
-
-    <p *ngIf="loading">Chargement des données...</p>
-    <p *ngIf="error">Erreur lors du chargement des données.</p>
   `,
   styleUrls: ['./line.component.scss'],
   standalone: false
