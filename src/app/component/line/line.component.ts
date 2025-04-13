@@ -45,7 +45,7 @@ export class LineComponent implements OnInit, OnDestroy {
   gradient = false;
   tooltipDisabled = false;
   view: [number, number] = [700, 400];
-  subscription: any;
+
   private olympicsSubscription: Subscription | null = null;
 
   constructor(

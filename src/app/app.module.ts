@@ -10,13 +10,13 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PieComponent } from './component/pie/pie.component';
 import { DetailsComponent } from './pages/details/details.component';
 import { LineComponent } from './component/line/line.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NotFoundComponent, DashboardComponent,PieComponent, DetailsComponent,LineComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgxChartsModule,BrowserAnimationsModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgxChartsModule,BrowserAnimationsModule, NoopAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
