@@ -25,24 +25,33 @@ export class DetailsComponent implements OnInit, OnDestroy{
       this.olympicsSubscription.unsubscribe();
     }  }
 
-  ngOnInit(): void {
-    const countryId = this.route.snapshot.paramMap.get('id');
-    if (countryId){
-      this.olympicService.getCountryById(+countryId)
-      //.pipe(delay(5000)) // délai artificiel pour simuler un temps de chargement plus long
-      .subscribe({
-        next: (country) => {
-          this.country = country;
-          this.loading = false;
-        },
-        error: (error) => {
-          this.error = true;
-          this.loading = false;
-          console.error('Erreur:', error);
-        }
-      });
+    ngOnInit(): void {
+      const countryId = this.route.snapshot.paramMap.get('id');
+      
+      if (countryId) {
+        this.olympicService.getCountryById(+countryId).subscribe({
+          next: (country) => {
+            if (country) {
+              this.country = country;
+              this.loading = false;
+              this.error = false; // Si le pays existe, on réinitialise l'erreur
+            } else {
+              // Si aucun pays trouvé
+              this.loading = false;
+              this.error = true;
+            }
+          },
+          error: (error) => {
+            this.error = true;
+            this.loading = false;
+            console.error('Erreur:', error);
+          }
+        });
+      } else {
+        this.error = true;
+        this.loading = false;
+      }
     }
-  }
 
 
   getTotalMedals(participations : any[]): number {
