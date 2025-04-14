@@ -26,6 +26,7 @@ export class PieComponent implements OnInit, OnDestroy {
   public pieChartData: any[] = [];
   public view: [number, number] = [700, 500];
   public allCountriesIds: number[] = [];
+  public loading: boolean = true;
 
   // Options du graphique
   showLegend = false;
@@ -45,22 +46,28 @@ export class PieComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updateChartDimensions();
 
-    this.olympicsSubscription = this.olympicService.getOlympics().subscribe((data: OlympicCountry[]) => {
-      if (data) {
-        // Construction des données pour le graphique
-        this.pieChartData = data.map((country) => ({
-          name: country.country,
-          value: this.getTotalMedals(country.participations),
-          extra: { countryId: country.id }
-        }));
-        this.allCountriesIds = data.map(country => country.id);
-        console.log("IDs des pays chargés :", this.allCountriesIds);
+    this.olympicsSubscription = this.olympicService.getOlympics().subscribe({
+      next: (data: OlympicCountry[]) => {
+        if (data && data.length > 0) {
+          this.pieChartData = data.map((country) => ({
+            name: country.country,
+            value: this.getTotalMedals(country.participations),
+            extra: { countryId: country.id }
+          }));
+          this.allCountriesIds = data.map(country => country.id);
+          console.log("IDs des pays chargés :", this.allCountriesIds);
+        }
+        this.loading = false; // Drapeau de fin de chargement
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des données:', err);
+        this.loading = false;
       }
     });
   }
 
   ngOnDestroy(): void {
-    // Annuler les souscriptions lorsque le composant est détruit pour éviter les fuites de mémoire
+    // Annuler la souscription pour éviter les fuites de mémoire
     if (this.olympicsSubscription) {
       this.olympicsSubscription.unsubscribe();
     }
@@ -71,11 +78,10 @@ export class PieComponent implements OnInit, OnDestroy {
   }
 
   onSelect(event: any): void {
-
     const countryId = event.extra.countryId;
 
     if(!this.allCountriesIds.includes(countryId)){
-      console.error(`Erreur :Le pays avec l'ID ${countryId} n'existe pas.`);
+      console.error(`Erreur : Le pays avec l'ID ${countryId} n'existe pas.`);
       alert("Ce pays n'existe pas dans notre base de données.");
       return;
     }
@@ -91,7 +97,7 @@ export class PieComponent implements OnInit, OnDestroy {
     this.updateChartDimensions();
   }
 
-  //taille graphique redéfnit
+  // Taille graphique redéfinie
   private updateChartDimensions(): void {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -100,9 +106,6 @@ export class PieComponent implements OnInit, OnDestroy {
       this.view = [width - 50, height / 2];
     } else if (width < 1024) {
       this.view = [width - 100, height / 2];
-    
     }
   }
 }
-
-

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
@@ -7,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 export class NotFoundComponent implements OnInit {
+  public errorMessage: string | undefined;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    // Récupère le message de l'état passé lors de la navigation
+    const navigationState = history.state.message;
+    if (navigationState) {
+      this.errorMessage = navigationState;
+    } else {
+      this.errorMessage = 'Page non trouvée.';
+    }
   }
-
 }

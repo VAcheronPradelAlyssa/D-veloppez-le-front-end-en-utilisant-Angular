@@ -1,21 +1,20 @@
 <div class="container">
-    <h1>Medals per country</h1>
-  
-    <div *ngIf="loading" class="loading-message">
-      Chargement des données...
-    </div>
-  
+  <h1>Medals per country</h1>
 
-    <div *ngIf="!loading && !noData" >
-      <div class="stats">
-        <div class="stat-box">
-          <p>Number of JOs <br><strong>{{ numberOfJOs }}</strong></p>
-        </div>
-        <div class="stat-box">
-          <p>Number of Countries <br><strong>{{ numberOfCountries }}</strong></p>
-        </div>
-      </div>
-  
-      <app-pie></app-pie>
-    </div>
+  <div *ngIf="loading" class="loading-message">
+    Chargement des données...
   </div>
+
+  <div *ngIf="!loading && !noData">
+    <div class="stats">
+      <div class="stat-box">
+        <p>Number of JOs <br><strong>{{ numberOfJOs }}</strong></p>
+      </div>
+      <div class="stat-box">
+        <p>Number of Countries <br><strong>{{ numberOfCountries }}</strong></p>
+      </div>
+    </div>
+
+    <app-pie></app-pie>
+  </div>
+</div>
