@@ -62,6 +62,7 @@ export class PieComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Erreur lors du chargement des données:', err);
         this.loading = false;
+        alert("Erreur réseau. Veuillez réessayer plus tard.");
       }
     });
   }
