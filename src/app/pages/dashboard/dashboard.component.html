@@ -5,6 +5,10 @@
     Chargement des données...
   </div>
 
+  <div *ngIf="noData && !loading" class="no-data-message">
+    Aucune donnée disponible.
+  </div>
+
   <div *ngIf="!loading && !noData">
     <div class="stats">
       <div class="stat-box">

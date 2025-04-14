@@ -7,18 +7,19 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-pie',
   template: `
-    <ngx-charts-pie-chart
-      [view]="view"
-      [results]="pieChartData"
-      [legend]="showLegend"
-      [labels]="showLabels"
-      [doughnut]="doughnut"
-      [gradient]="gradient"
-      [explodeSlices]="explodeSlices"
-      [trimLabels]="trimLabels"
-      (select)="onSelect($event)">
-    </ngx-charts-pie-chart>
-  `,
+  
+  <ngx-charts-pie-chart
+    [view]="view"
+    [results]="pieChartData"
+    [legend]="showLegend"
+    [labels]="showLabels"
+    [doughnut]="doughnut"
+    [gradient]="gradient"
+    [explodeSlices]="explodeSlices"
+    [trimLabels]="trimLabels"
+    (select)="onSelect($event)">
+  </ngx-charts-pie-chart>
+`,
   styleUrls: ['./pie.component.scss'],
   standalone: false
 })
@@ -27,6 +28,8 @@ export class PieComponent implements OnInit, OnDestroy {
   public view: [number, number] = [700, 500];
   public allCountriesIds: number[] = [];
   public loading: boolean = true;
+  public error: boolean = false;
+  public errorMessage: string | null = null;
 
   // Options du graphique
   showLegend = false;
@@ -37,6 +40,8 @@ export class PieComponent implements OnInit, OnDestroy {
   trimLabels = false;
 
   private olympicsSubscription: Subscription | null = null;
+  private loadingSubscription: Subscription | null = null;
+  private errorSubscription: Subscription | null = null;
 
   constructor(
     private olympicService: OlympicService,
@@ -46,6 +51,7 @@ export class PieComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.updateChartDimensions();
 
+    // Abonnement aux données
     this.olympicsSubscription = this.olympicService.getOlympics().subscribe({
       next: (data: OlympicCountry[]) => {
         if (data && data.length > 0) {
@@ -55,22 +61,39 @@ export class PieComponent implements OnInit, OnDestroy {
             extra: { countryId: country.id }
           }));
           this.allCountriesIds = data.map(country => country.id);
-          console.log("IDs des pays chargés :", this.allCountriesIds);
         }
-        this.loading = false; // Drapeau de fin de chargement
       },
       error: (err) => {
         console.error('Erreur lors du chargement des données:', err);
-        this.loading = false;
-        alert("Erreur réseau. Veuillez réessayer plus tard.");
       }
     });
+
+    // Abonnement à l'état de chargement
+    this.loadingSubscription = this.olympicService.getLoadingStatus().subscribe(
+      (loading) => {
+        this.loading = loading;
+      }
+    );
+
+    // Abonnement à l'état d'erreur
+    this.errorSubscription = this.olympicService.getError().subscribe(
+      (error) => {
+        this.error = !!error;
+        this.errorMessage = error || "Une erreur est survenue.";
+      }
+    );
   }
 
   ngOnDestroy(): void {
-    // Annuler la souscription pour éviter les fuites de mémoire
+    // Annuler les souscriptions pour éviter les fuites de mémoire
     if (this.olympicsSubscription) {
       this.olympicsSubscription.unsubscribe();
+    }
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
+    }
+    if (this.errorSubscription) {
+      this.errorSubscription.unsubscribe();
     }
   }
 
@@ -81,7 +104,7 @@ export class PieComponent implements OnInit, OnDestroy {
   onSelect(event: any): void {
     const countryId = event.extra.countryId;
 
-    if(!this.allCountriesIds.includes(countryId)){
+    if (!this.allCountriesIds.includes(countryId)) {
       console.error(`Erreur : Le pays avec l'ID ${countryId} n'existe pas.`);
       alert("Ce pays n'existe pas dans notre base de données.");
       return;
