@@ -59,4 +59,3 @@ export class DetailsComponent implements OnInit, OnDestroy {
   getTotalAthletes(participations: any[]): number {
     return participations.reduce((total, participation) => total + participation.athleteCount, 0);
   }
-}

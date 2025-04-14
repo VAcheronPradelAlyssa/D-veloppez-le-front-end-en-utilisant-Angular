@@ -115,5 +115,4 @@ export class LineComponent implements OnInit, OnDestroy {
     } else if (width < 1024) {
       this.view = [width - 100, height / 2];
     }
-  }
-}
+
