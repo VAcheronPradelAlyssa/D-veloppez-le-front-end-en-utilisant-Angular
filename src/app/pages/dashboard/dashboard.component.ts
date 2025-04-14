@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public numberOfCountries: number = 0;
   public loading: boolean = true;
   public noData: boolean = false;
+  public olympicsData: OlympicCountry[] = [];
 
   private olympicsSubscription: Subscription | null = null;
 
@@ -21,28 +22,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('Initialisation du DashboardComponent');
+
+    // Vérifier si les données sont déjà présentes dans le BehaviorSubject avant de procéder.
     this.olympicsSubscription = this.olympicService.getOlympics().subscribe({
       next: (data: OlympicCountry[]) => {
         console.log('Données reçues dans DashboardComponent:', data); // Vérifie les données reçues
+        
         if (data.length > 0) {
+          // Si les données sont présentes, on les stocke dans olympicsData
+          this.olympicsData = data;
           this.numberOfJOs = this.calculateUniqueYears(data);
           this.numberOfCountries = data.length;
+          this.loading = false;
         } else {
+          // Si aucune donnée n'est présente, on affiche un message d'erreur
           this.noData = true;
+          this.loading = false;
         }
+      },
+      error: (err) => {
+        // Gestion des erreurs pour l'échec de récupération des données
+        console.error('Erreur lors du chargement des données:', err);
         this.loading = false;
+        this.noData = true;
       }
     });
   }
 
   ngOnDestroy(): void {
-    // Annuler les souscriptions lorsque le composant est détruit pour éviter les fuites de mémoire
+    // Annuler la souscription pour éviter les fuites de mémoire
     if (this.olympicsSubscription) {
       this.olympicsSubscription.unsubscribe();
     }
   }
 
-  // Méthode pour calculer le nombre d'années uniques dans les participations
   private calculateUniqueYears(countries: OlympicCountry[]): number {
     const years = new Set<number>();
     countries.forEach((country) => {

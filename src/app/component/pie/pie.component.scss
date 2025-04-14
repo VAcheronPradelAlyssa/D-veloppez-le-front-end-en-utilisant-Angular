@@ -1,9 +1,8 @@
-::ng-deep ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
-    .tooltip-caret.position-top {
+::ng-deep ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip  {
+   
+  .tooltip-caret.position-top {
       border-top-color: #04838f;
     }
-  
-    background-color: #04838f;
-    color: rgb(255, 255, 255);
-  }
-  
+  background-color: #04838f;
+  color: rgb(255, 255, 255);
+}
