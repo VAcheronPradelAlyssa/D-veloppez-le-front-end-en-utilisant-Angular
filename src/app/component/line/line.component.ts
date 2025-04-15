@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
     <ngx-charts-line-chart
       *ngIf="lineChartData.length > 0"
       [view]="view"
-      [results]="[{ name: countryName, series: lineChartData }]"
+      [results]="[{ name: 'Medals', series: lineChartData }]"
       [xAxis]="xAxis"
       [yAxis]="yAxis"
       [showXAxisLabel]="showXAxisLabel"
@@ -27,7 +27,6 @@ import { Subscription } from 'rxjs';
 })
 export class LineComponent implements OnInit, OnDestroy {
   public lineChartData: any[] = [];
-  public countryName: string = '';
   public loading = true;
   public error = false;
 
@@ -64,7 +63,6 @@ export class LineComponent implements OnInit, OnDestroy {
       this.olympicsSubscription = this.olympicService.getCountryById(+countryId).subscribe({
         next: (country) => {
           if (country) {
-            this.countryName = country.country;
             this.lineChartData = this.transformData(country.participations);
           } else {
             this.error = true;
