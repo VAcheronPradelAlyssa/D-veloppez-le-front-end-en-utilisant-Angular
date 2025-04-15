@@ -1,0 +1,29 @@
+<div *ngIf="loading" class="loading-message">
+  Chargement des données...
+</div>
+
+<div *ngIf="error && !loading">Le pays demandé n'existe pas ou a été supprimé.</div>
+
+<div *ngIf="country && !loading && !error" class="container">
+  <h1>{{ country.country }}</h1>
+
+  <div class="stats">
+    <div class="stat-box">
+      <p>Number of entries <br><strong>{{ country.participations.length }}</strong></p>
+    </div>
+    <div class="stat-box">
+      <p>Total number of medals <br><strong>{{ getTotalMedals(country.participations) }}</strong></p>
+    </div>
+    <div class="stat-box">
+      <p>Total number of athletes <br><strong>{{ getTotalAthletes(country.participations) }}</strong></p>
+    </div>
+  </div>
+
+  <div class="line-chart">
+    <app-line></app-line>
+  </div>
+</div>
+
+<a routerLink="" *ngIf="error || (country && !loading && !error)">
+  <button class="buttonBack">Retour</button>
+</a>

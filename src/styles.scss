@@ -1,1 +1,155 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Country', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 24px;
+  padding: 10px;
+  border: 1px solid #04838f;
+  border-radius: 10px;
+  color: white;
+  background-color: #04838f;
+  font-weight: lighter;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+.stat-box {
+  flex: 1;
+  padding: 20px;
+  margin: 10px;
+  border: 1mm solid #04838f;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.buttonBack {
+  color: white;
+  border: solid 1px #04838f;
+  border-radius: 10px;
+  padding: 10px 20px;
+  background-color: #04838f;
+  margin: 20px auto;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #035b63;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-box {
+    flex: 1 1 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 5px;
+  }
+
+  .stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-box {
+    flex: 1 1 90%;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .buttonBack {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttonBack {
+    padding: 6px 12px;
+  }
+}
+
+.center a {
+  border: solid 1px #04838f;
+  border-radius: 10px;
+  background-color: #04838f;
+  color: white;
+  padding: 5px;
+  text-decoration: none;
+}
+.message {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: red;
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  .buttonBack {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .buttonBack:hover {
+    background-color: #cc0000;
+  }
+}
