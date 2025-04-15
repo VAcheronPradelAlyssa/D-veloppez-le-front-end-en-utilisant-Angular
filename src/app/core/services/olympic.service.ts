@@ -64,4 +64,7 @@ export class OlympicService {
   getError(): Observable<string | null> {
     return this.error$.asObservable();
   }
+  getDataLoadedStatus(): Observable<boolean> {
+    return this.dataLoaded$.asObservable();
+  }
 }
